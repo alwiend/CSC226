@@ -6,6 +6,13 @@
 * */
 
 /*
+*	Input: A text file (the genome) and the pattern (the gene), both entirely consisting
+*	       of the characters from the alphabet {A, C, G, T}.
+*	Output: If the text contains the pattern, the index of the first occurrence of the
+		pattern in the text. Otherwise, the length of the text.
+* */
+
+/*
    (originally from R.I. Nishat - 08/02/2014)
    (revised by N. Mehta - 11/7/2018)
 */
