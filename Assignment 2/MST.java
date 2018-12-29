@@ -60,35 +60,35 @@ import java.util.*;
 * 	Helper class to store edge weights and its vertices
 * */
 class edgesWeight implements Comparable<edgesWeight>{
-    int u;
-	  int v;
-	  int weight;
-	  public edgesWeight ( int w, int p, int q) { // Constructor with vertices and weight of the edge
-		    v = p;
-		    u = q;
-		    weight = w;
-	  }
-	  public int getWeight(){ // Return weight of edge
-		    return this.weight;
-	  }
-	  public int getU(){ // Return one of the edge's vertices
-		    return this.u;
-	  }
-	  public int getV(){ // Return the other edge's vertex
-		    return this.v;
-	  }
-	  // Used to overrride the compareTo function to sort the priority queue
-	  @Override
-	  public int compareTo(edgesWeight otherWeight) {
-		    if (this.getWeight() > otherWeight.getWeight()) {
-			      return 1;
-		    }
-		    else if (this.getWeight() < otherWeight.getWeight()) {
-			      return -1;
-		    } else {
-			      return 0;
-		    }
-	  }
+	int u;
+	int v;
+	int weight;
+	public edgesWeight ( int w, int p, int q) { // Constructor with vertices and weight of the edge
+		v = p;
+		u = q;
+		weight = w;
+	}
+	public int getWeight(){ // Return weight of edge
+		return this.weight;
+	}
+	public int getU(){ // Return one of the edge's vertices
+		return this.u;
+	}
+	public int getV(){ // Return the other edge's vertex
+		return this.v;
+	}
+	// Used to overrride the compareTo function to sort the priority queue
+	@Override
+	public int compareTo(edgesWeight otherWeight) {
+		if (this.getWeight() > otherWeight.getWeight()) {
+			return 1;
+		}
+		else if (this.getWeight() < otherWeight.getWeight()) {
+			return -1;
+		} else {
+			return 0;
+		}
+	}
 }
 
 /*
@@ -96,143 +96,140 @@ class edgesWeight implements Comparable<edgesWeight>{
 * 	Adapted from the textbook page 228
 * */
 class UF {
-    private static int parent[];
-	  private static int size[];
-	  private static int count;
-	  UF(int n) { // Initialize
+	private static int parent[];
+	private static int size[];
+	private static int count;
+	UF(int n) { // Initialize
 		count = n;
 		parent = new int[n];
 		size = new int[n];
 		for(int i = 0; i < n; i++) {
-		    parent[i] = i;
-			  size[i] = 1;
+			parent[i] = i;
+			size[i] = 1;
 		}
-}
-	  // Find the vertice n
-	  public static int find(int n) {
-		    while (n != parent[n])
-			      n = parent[n];
-		    return n;
+	}
+	// Find the vertice n
+	public static int find(int n) {
+		while (n != parent[n])
+			n = parent[n];
+		return n;
 	}
 	//Check to see if the vertices are connected
 	public static boolean connected(int v, int u) {
-		  return find(v) == find(u);
+		return find(v) == find(u);
 	}
 	//Join the two vertices
 	public static void union(int v, int u) {
-		  int rootV = find(v);
-		  int rootU = find(u);
-		  if (rootV == rootU) {
-			    return;
-		  }
-		  // make smaller root point to larger one
-		  if (size[rootV] < size[rootU]) {
-			    parent[rootV] = rootU;
-			    size[rootU] += size[rootV];
-		  } else {
-			    parent[rootU] = rootV;
-			    size[rootV] += size[rootU];
-		  }
-		  count--;
-	 }
+		int rootV = find(v);
+		int rootU = find(u);
+		if (rootV == rootU) {
+			return;
+		}
+		// make smaller root point to larger one
+		if (size[rootV] < size[rootU]) {
+			parent[rootV] = rootU;
+			size[rootU] += size[rootV];
+		} else {
+			parent[rootU] = rootV;
+			size[rootV] += size[rootU];
+		}
+		count--;
+	}
 }
 
 public class MST {
 
-    /*
-	  * 	Function to calculate the MST using kruskals algorithm
-	  * 	@param int[][][] adj - the array that contains all the information about the graphs
-	  * 	@return totalWeight - the weight of the MST
-	  * */
-	  static int mst(int[][][] adj) {
-		    int n = adj.length;
-		    Queue<edgesWeight> minPQ = new PriorityQueue<edgesWeight>(); // Priority queue of edges
-		    UF uf = new UF(n); // weighted union find
-		    for (int i = 0; i < n; i++) {
-			      for (int j = 0; j < adj[i].length; j++) {
-				        edgesWeight temp = new edgesWeight(adj[i][j][1], i, adj[i][j][0]); // Create a new edge object
-				        minPQ.add(temp); // Add edge to the priority queue
-			      }
-		    }
-		    int totalWeight = 0;
-		    while (!minPQ.isEmpty()) {
-			      edgesWeight smallWeight = minPQ.remove(); // Remove the minimum weighted edge
-			      if (!uf.connected(smallWeight.getV(), smallWeight.getU())){ // Check to see if the vertices are connected
-				        uf.union(smallWeight.getV(), smallWeight.getU()); // connect the vertices
-				        totalWeight += smallWeight.getWeight(); // add the minimum weight to the total weight
-			      }
-		    }
-		    return totalWeight;
-    }
+    	/*
+	* 	Function to calculate the MST using kruskals algorithm
+	* 	@param int[][][] adj - the array that contains all the information about the graphs
+	* 	@return totalWeight - the weight of the MST
+	* */
+	static int mst(int[][][] adj) {
+		int n = adj.length;
+		Queue<edgesWeight> minPQ = new PriorityQueue<edgesWeight>(); // Priority queue of edges
+		UF uf = new UF(n); // weighted union find
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < adj[i].length; j++) {
+				edgesWeight temp = new edgesWeight(adj[i][j][1], i, adj[i][j][0]); // Create a new edge object
+				minPQ.add(temp); // Add edge to the priority queue
+			}
+		}
+		int totalWeight = 0;
+		while (!minPQ.isEmpty()) {
+			edgesWeight smallWeight = minPQ.remove(); // Remove the minimum weighted edge
+			if (!uf.connected(smallWeight.getV(), smallWeight.getU())){ // Check to see if the vertices are connected
+				uf.union(smallWeight.getV(), smallWeight.getU()); // connect the vertices
+				totalWeight += smallWeight.getWeight(); // add the minimum weight to the total weight
+			}
+		}
+		return totalWeight;
+	}
+	
+	public static void main(String[] args) {
+	/* Code to test your implementation */
+	/* You may modify this, but nothing in this function will be marked */
 
-	  public static void main(String[] args) {
-	  /* Code to test your implementation */
-	  /* You may modify this, but nothing in this function will be marked */
+		int graphNum = 0;
+		Scanner s;
 
-		    int graphNum = 0;
-		    Scanner s;
-
-		    if (args.length > 0) {
-	 	    //If a file argument was provided on the command line, read from the file
-	  	      try {
-			          s = new Scanner(new File(args[0]));
-	  	      }
-	  	      catch(java.io.FileNotFoundException e) {
-			          System.out.printf("Unable to open %s\n",args[0]);
-			          return;
-	  	      }
-	  	      System.out.printf("Reading input values from %s.\n",args[0]);
-		    } else {
-		    //Otherwise, read from standard input
-	 	        s = new Scanner(System.in);
-	 	        System.out.printf("Reading input values from stdin.\n");
-		    }
-		
-		    //Read graphs until EOF is encountered (or an error occurs)
-		    while(true) {
-	  	      graphNum++;
-	  	      if(!s.hasNextInt()) {
-			          break;
-	  	      }
-	          System.out.printf("Reading graph %d\n",graphNum);
-	          int n = s.nextInt();
-
-	          int[][][] adj = new int[n][][];
-	    
-	          int valuesRead = 0;
-	          for (int i = 0; i < n && s.hasNextInt(); i++) {
-			          LinkedList<int[]> edgeList = new LinkedList<int[]>();
-			          for (int j = 0; j < n && s.hasNextInt(); j++) {
-		   	            int weight = s.nextInt();
-		    	          if(weight > 0) {
-					              edgeList.add(new int[]{j, weight});
-		    	          }
+		if (args.length > 0) {
+	 	//If a file argument was provided on the command line, read from the file
+	  		try {
+				s = new Scanner(new File(args[0]));
+	  		}
+	  		catch(java.io.FileNotFoundException e) {
+				System.out.printf("Unable to open %s\n",args[0]);
+				return;
+	  		}
+	  		System.out.printf("Reading input values from %s.\n",args[0]);
+		} else {
+		//Otherwise, read from standard input
+	 		s = new Scanner(System.in);
+	 		System.out.printf("Reading input values from stdin.\n");
+		}
+		//Read graphs until EOF is encountered (or an error occurs)
+		while(true) {
+			graphNum++;
+			if(!s.hasNextInt()) {
+				break;
+			}
+			System.out.printf("Reading graph %d\n",graphNum);
+			int n = s.nextInt();
+			int[][][] adj = new int[n][][];
+	 		int valuesRead = 0;
+	          	for (int i = 0; i < n && s.hasNextInt(); i++) {
+				LinkedList<int[]> edgeList = new LinkedList<int[]>();
+				for (int j = 0; j < n && s.hasNextInt();
+				 	int weight = s.nextInt();
+					if(weight > 0) {
+					edgeList.add(new int[]{j, weight});
+				}
 		                valuesRead++;
 		        }
 		        adj[i] = new int[edgeList.size()][2];
 		        Iterator it = edgeList.iterator();
 		        for(int k = 0; k < edgeList.size(); k++) {
-		            adj[i][k] = (int[]) it.next();
+				adj[i][k] = (int[]) it.next();
 		        }
-	      }
-	      if (valuesRead < n * n) {
-		        System.out.printf("Adjacency matrix for graph %d contains too few values.\n",graphNum);
+		}
+		if (valuesRead < n * n) {
+			System.out.printf("Adjacency matrix for graph %d contains too few values.\n",graphNum);
 		        break;
-	      }
+		}
 
-	      // // output the adjacency list representation of the graph
-	 /*	 for(int i = 0; i < n; i++) {
-	     	System.out.print(i + ": ");
-	     	for(int j = 0; j < adj[i].length; j++) {
-	     	    System.out.print("(" + adj[i][j][0] + ", " + adj[i][j][1] + ") ");
-	     	}
-	     	System.out.print("\n");
-	    }
-	*/
-	      int totalWeight = mst(adj);
-	      System.out.printf("Graph %d: Total weight of MST is %d\n",graphNum,totalWeight);
+	      	// // output the adjacency list representation of the graph
+		/*for(int i = 0; i < n; i++) {
+	     		System.out.print(i + ": ");
+	     		for(int j = 0; j < adj[i].length; j++) {
+	     	    		System.out.print("(" + adj[i][j][0] + ", " + adj[i][j][1] + ") ");
+	     		}
+	     		System.out.print("\n");
+	    	}
+		*/
+	      	int totalWeight = mst(adj);
+	      	System.out.printf("Graph %d: Total weight of MST is %d\n",graphNum,totalWeight);
 
 				
-	      }
-    } 
+	      	}
+    	} 
 }
