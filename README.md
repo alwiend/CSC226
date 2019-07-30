@@ -1,5 +1,5 @@
 # CSC226
-Course work for CSC 226 (Fall 2018) at UVIC
+Course work for CSC 226 (Fall 2018) Algorithms and Data Structures II at UVIC
 
 Topics for the course includes:
 - intro, tree definitions and properties, the natural correspondence.
